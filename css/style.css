@@ -1,0 +1,292 @@
+
+/*---- ベース構成 ----*/
+
+@charset "UTF-8";
+html {
+    font-size: 62.5%;
+}
+
+body {
+    background-color: #71bcd4;
+}
+
+header {
+    height: 5vh;
+    background-color: #6d3c2c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Dancing Script', cursive;
+    margin: auto;
+}
+
+main {
+    height: 80vh;
+    display: flex;
+    margin: auto;
+}
+
+footer {
+    height: 5vh;
+    background-color: #6d3c2c;
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+}
+
+.wrapper {
+    width: 100vw;
+}
+
+.title {
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Dancing Script', cursive;
+}
+
+/* section takePhoto */
+.section__takePhoto {
+    width: 33%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    border-radius: 25px;
+}
+/* section setPhoto */
+.section__setPhoto {
+    width: 33%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 25px;
+}
+/* section getPhoto */
+.section__getPhoto {
+    width: 33vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    border-radius: 25px;
+}
+
+.text-center {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    justify-content: center;
+}
+
+/* ----- コンテンツの設定 ---- */
+/* header */
+header p {
+    color: #f2f2f2;
+    font-weight: bold;
+    margin-left: 3vw;
+    font-size: 3rem;
+}
+
+/* main */
+/* title */
+
+.title h1 {
+    font-size: 5rem;
+    font-weight: bold;
+    color: #0f2d60;
+}
+.title span {
+    font-size: 2rem;
+    padding-left: 10px;
+}
+
+.description {
+    font-size: 3rem;
+    font-family: 'Dancing Script', cursive;
+    margin-top: 10px;
+    color: #0f2d60;
+}
+
+.day {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.btn1 {
+    margin-top: 20px;
+    height: 50px;
+    width: 350px;
+    font-size: 3rem;
+    font-family: 'Dancing Script', cursive;
+    border-radius: 25px;
+    background-color: #f9bb40;
+    color: #333;
+    border: none;
+    font-weight: bold;
+}
+
+.btn1:hover {
+    background-color: #004D55;
+}
+
+.btn2 {
+    margin-top: 10px;
+    height: 50px;
+    width: 350px;
+    font-size: 3rem;
+    font-family: 'Dancing Script', cursive;
+    border-radius: 25px;
+    background-color: #b13f11;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.btn2:hover {
+    background-color: #610916;
+}
+
+.btn-login {
+    margin-right: 50px;
+    height: 30px;
+    width: 150px;
+    font-size: 2.5rem;
+    font-family: 'Dancing Script', cursive;
+    border-radius: 25px;
+    background-color: #f9bb40;
+    color: #333;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-login:hover {
+    background-color: #004D55;
+}
+
+.btn-logout {
+    margin-right: 50px;
+    height: 30px;
+    width: 150px;
+    font-size: 2.5rem;
+    font-family: 'Dancing Script', cursive;
+    border-radius: 25px;
+    background-color: #b13f11;
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-logout:hover {
+    background-color: #610916;
+}
+
+.select_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.select_btn {
+    height: 50px;
+    width: 350px;
+    margin-top: 20px;
+    font-size: 3rem;
+    font-family: 'Dancing Script', cursive;
+    border-radius: 25px;
+    border: none;
+    background-color: #f9bb40;
+    color: #333;
+    border: none;
+    font-weight: bold;
+}
+
+.select_btn:hover {
+    background-color: #004D55;
+}
+
+.output-date-time {
+    font-size: 2rem;
+    /* padding: 10px; */
+    /* margin: auto; */
+}
+
+.select_date {
+    position: absolute;
+    bottom: 25%;
+    right: 8%;
+    font-size: 2rem;
+    /* padding: 10px; */
+    text-align: center;
+}
+
+.photo_archive {
+    font-size: 2rem;
+    margin-top: 10px;
+    width: 350px;
+}
+
+#camera {
+    margin-top: 20px;
+    border: #0f2d60 solid;
+}
+
+#video {
+    margin-top: 20px;
+    border: #0f2d60 solid;
+}
+
+#picture {
+    margin: 20px 0 33px;
+    border: #0f2d60 solid;
+}
+#picture1 {
+    margin-top: 20px;
+    border: #0f2d60 solid;
+}
+
+#faceapi {
+    z-index: 100;
+    position: absolute;
+    margin-top: 20px;
+    /* right: 50; */
+}
+
+/* footer */
+footer small {
+    color: #f2f2f2;
+}
+
+#camera {
+	width: 400px;
+	height: 300px;
+}
+
+#img {
+	width: 400px;
+	height: 300px;
+}
+
+#uname {
+    font-size: 1rem;
+}
+
+
+.align-center {
+    display: flex;
+    align-items: center;
+}
+.photo {
+    width: 50px;
+    border-radius: 100%;
+    margin-right: 20px;
+}
+.video_api {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/replay.js"></script>
+    <script defer src="./libs/faceapi/face-api.min.js"></script>
+    <script defer src="./video.js"></script>
+    <style>
+        canvas, video{
+        border: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <header>
+            <p>face checker2</p>
+
+            <div class="align-center">
+                <img src="" id="prof" class="photo">
+                <button id="logout" class="btn-logout">Log out</button>
+            </div>
+        </header>
+
+        
+        <!-- 見出し -->
+        <section class="title">
+
+            <h1>
+            The face is the index of the mind.
+            </h1>
+            
+        </section>
+        
+        <main>
+            <!-- 写真撮影 -->
+            <section class="section__takePhoto">
+                
+                <p class="description">1.Take your photo.</p>
+                <!-- <video id="camera" width="400" height="300" autoplay muted></video> -->
+                <div class="video_api">
+                    <video id="video" width="400" height="300" autoplay muted></video>
+                    <div id="faceapi"></div>
+                </div>
+                <button type="button" id="shutter" class="btn1">Cheese !</button>
+
+                <!-- <audio id="se" preload="auto">
+                    <source src="camera-shutter1.mp3" type="audio/mp3">
+                </audio> -->
+        
+            </section>
+            
+            <!-- 写真保存&日付付与 -->
+            <section class="section__setPhoto">
+
+                <p class="description">2.Photo will be saved.</p>
+                <!-- <img src="./images/sample01.jpeg" id="my-img"> -->
+                <canvas id="picture" width="400" height="300"></canvas>
+                <!-- <canvas id="my-cvs"></canvas> -->
+            <!-- 取得した日付をアウトプットするためのpタグを用意 -->
+                <div>
+                    <p class="output-date-time"></p>
+                </div>
+            </section>
+            
+            <!-- 写真取り出し -->
+            <section class="section__getPhoto">
+            
+                <p class="description">3.Compare with the past.</p>
+                <canvas id="picture1" width="400" height="300"></canvas>
+                <div class="select_form">
+                    <!-- <label for="fruit" class="select_date">日付を選択してください</label> -->
+                    <input id="replay" class="select_btn" type="button" value="Select a day"/>
+                    <select id="test" class="photo_archive js-archive">
+                        <!-- 日付情報を追加 -->""
+                    </select>
+                </div>
+                    <!-- <button type="button" id="replay" class="btn3 js-replay">replay</button> -->
+                    <!-- <table class="photo_archive js-archive">
+                    </table> -->
+                    
+                <button type="button" id="clear" class="btn2 js-clear">Clear</button>
+                <button type="button" id="allclear" class="btn2 js-clear">All Clear</button>
+            </section>
+        </main>
+
+        <footer>
+            <small>copyrights 2022 Cheese All RIghts Reserved.</small>
+        </footer>
+
+    </div>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JQuery -->
+
+    <!-- face api -->
+    <!-- <script src="./libs/faceapi/face-api.js"></script>
+    <script src="./script.js"></script>     -->
+
+    <!-- Login & Logout 処理 -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp }
+            from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved, onValue }
+            from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut,onAuthStateChanged,}
+            from "https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+
+            apiKey: "",
+            authDomain: "",
+            databaseURL: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: ""
+
+            };
+        // Initialize Firebase
+            // キーで接続しに行く
+            const app = initializeApp(firebaseConfig);
+        // ##################################
+        // RealtimeDatabase接続
+        // ##################################
+            const db = getDatabase(app);
+        // ##################################
+        // GoogleAuth(認証用)
+        // ##################################
+            // 認証用のスクリプト↓
+            const provider = new GoogleAuthProvider();
+            provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+            const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+        if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/firebase.User
+                const uid = user.uid;
+                console.log(uid);
+                    if (user !== null) {
+                        user.providerData.forEach((profile) => {
+                            // login情報取得
+                            $("#uname").text(profile.displayName);
+                            $("#prof").attr("src",profile.photoURL);
+                        })
+                    }
+                
+            // 撮影処理
+            // window.onload = () => {
+
+                // const video  = document.querySelector("#camera");
+                const video = document.getElementById("video");
+                // const face  = document.getElementById("faceapi");
+                const canvas = document.getElementById("picture");
+                const faceCanvas = faceapi.createCanvasFromMedia(video)
+
+                // const se     = document.querySelector('#se');
+
+                // カメラ設定
+                // const constraints = {
+                //     audio: false,
+                //     video: {
+                //     width: 400,
+                //     height: 300,
+                //     facingMode: "user"   // フロントカメラを利用する
+                //     }
+                // };
+
+                // カメラを<video>と同期
+                
+                // navigator.mediaDevices.getUserMedia(constraints)
+                //     .then( (stream) => {
+                //         video.srcObject = stream;
+                //         video.onloadedmetadata = (e) => {
+                //         video.play();
+                //         };
+                //     })
+                //     .catch( (err) => {
+                //         console.log(err.name + ": " + err.message);
+                //     });
+
+                /**
+                 * シャッターボタン
+                */
+
+                document.getElementById("shutter").addEventListener("click", () => {
+                    const ctx = canvas.getContext("2d");
+
+                    // 演出的な目的で一度映像を止めてSEを再生する
+                    // video.pause();  // 映像を停止
+                    // se.play();      // シャッター音
+                    setTimeout( () => {
+                    video.play();    // 0.5秒後にカメラ再開
+                    }, 500);
+
+                    // 今日の日付データをcurrentDateに格納
+                    const currentDate = new Date();
+
+                    // 年・月・日・曜日を取得
+                    const year = currentDate.getFullYear();
+                    const month = currentDate.getMonth() + 1;
+                    const date = currentDate.getDate();
+                    const day = currentDate.getDay();
+                    const weekday = ["日","月","火","水","木","金","土"];
+
+                    // 時間を取得
+                    const hour = formatTime(currentDate.getHours());
+                    const minute = formatTime(currentDate.getMinutes());
+                    const second = formatTime(currentDate.getSeconds());
+
+                    // 0~9の数値に0を足して2桁にする関数(例: 0:0:0 -> 00:00:00)
+                    function formatTime(val) {
+                    return ("0" + val).slice(-2);
+                    }
+
+                    // 取得した日付・時間をアウトプット
+                    const outputDateTimeEl = document.querySelector('.output-date-time');
+                    outputDateTimeEl.innerText = `${year}年${month}月${date}日${weekday[day]}曜日 ${hour}:${minute}:${second}`;
+                    
+                    // 取得した日付・時間をset_photoのselect内に保存
+                    let nowTime = document.querySelector('.output-date-time').innerHTML
+                    let archive = document.querySelector('.js-archive')
+                    console.log(nowTime);
+                    console.log(archive);
+
+                    $('.js-archive').append(`
+                    <option>${nowTime}</option>
+                    `);
+
+                    // canvasに画像を貼り付ける
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // 写真保存
+                    let base64 = canvas.toDataURL();
+
+                        //アンカータグを作成
+                        // let a = document.createElement('a');
+                        //canvasをJPEG変換し、そのBase64文字列をhrefへセット
+                        // a.href = canvas.toDataURL('image/jpeg', 1);
+                        // console.log(a.href);
+                        //ダウンロード時のファイル名を指定
+                        // a.download = 'download.jpg';
+                        //クリックイベントを発生させる
+                        // a.click();
+                        // const photoRaw = a.download;
+                        // console.log (photoRaw);
+
+
+                    // Realtime databaseに保存する
+                    
+                        // Initialize Firebase
+                        const app = initializeApp(firebaseConfig);
+                        const db = getDatabase(app);
+                        const dbRef = ref(db, "users/"+uid+"/facecheker2/"+nowTime);
+                        const msg = {
+                            nowTime : nowTime,
+                            base64 : base64
+                        };
+                        console.log(msg);
+                        
+                        // const newPostRef = push(dbRef) //データ送信の準備
+                        // set(newPostRef, msg); // DBに値をセットする
+                        set(dbRef, msg); // DBに値をセットする
+
+                });
+
+            // };
+
+                // 保存画像の呼び出し
+                $("#replay").on("click", function(){
+
+                    // const str = document.getElementById("test").value();
+                    // const str = $("#test").val();
+                    // console.log(str);
+                    // document.getElementById("span3").textContent = str;
+                    // localStorage.getItem(str);
+                    
+                    // LocalStroageからデータを取得する
+                    let canvas1 = document.querySelector("#picture1");
+                    let ctx = canvas1.getContext("2d");
+
+                    const dbRef_replay = ref(db, "users/"+uid+"/facecheker2/"+$("#test").val());
+                    console.log(dbRef_replay);
+                    
+                    onValue(dbRef_replay, function (data) {
+                        const msg = data.val();
+                        console.log(msg, '取得したデータの塊')
+                        const key = data.key;
+                        console.log(key, 'データの塊にアクセス')
+                        
+                        const base64 = msg.base64;
+                        // console.log(base64);
+                        
+                        // Imageオブジェクトを作成し、src属性にデータを設定する
+                        const image = new Image();
+                        image.src = base64;
+                        image.onload = function(){
+                            
+                            // 画像の読み込みが終わったら、Canvasに画像を反映する。
+                            ctx.drawImage(image, 0, 0, 400, 300);
+                            
+                        };
+                    })
+                    
+                });
+                
+                
+                $("#clear").on("click", function(){
+                    
+                    const dbRef_clear = ref(db, "users/"+uid+"/facecheker2/"+$("#test").val());
+                    console.log(dbRef_clear);
+
+                    onValue(dbRef_clear, function (data) {
+                        const msg = data.val();
+                        console.log(msg, '取得したデータの塊')
+                        const key = data.key;
+                        console.log(key, 'データの塊にアクセス')
+                        
+                        // buttonのnameを取得してdbのリファレンスを削除します。
+                        remove(dbRef_clear);
+                            
+                        // 画面を更新して反映させます。
+                        location.reload();
+                        
+                    });
+                });
+
+                const dbRef_allclear = ref(db, "users/"+uid+"/facecheker2/");
+
+                $("#allclear").on("click", function(){
+
+                    // buttonのnameを取得してdbのリファレンスを削除します。
+                    remove(dbRef_allclear);
+                        
+                    // 画面を更新して反映させます。
+                    location.reload();
+                
+                });
+
+                const dbRef_org = ref(db, "users/"+uid+"/facecheker2/");
+
+                // onChildRemoved(dbRef_org, function (data) {
+                //     const msg = data.val();
+                //     console.log(msg, '取得したデータの塊')
+                //     const key = data.key;
+                //     console.log(key, 'データの塊にアクセス')
+
+                //     $('.js-archive').append(`
+                //     <option>${msg.nowTime}</option>
+                //     `);
+
+                // });
+
+            } else {
+                // User is signed out
+                _redirect()
+            }
+        });
+
+        // ##################################
+        // ログアウト処理
+        // ##################################
+
+        $("#logout").on("click", function(){
+            signOut(auth).then(()=>{
+                _redirect();
+            }).catch((error) => {
+                console.error(error);
+            });
+        });
+
+        function _redirect(){
+            console.log("ログアウトしました")
+            location.href="./submit_login.html"
+        }
+
+    </script>
+
+</body>
+</html>
